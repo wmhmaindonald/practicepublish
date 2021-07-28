@@ -2,25 +2,43 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const { useState, useEffect } = React
+
+const Counter: React.FC<{
+  count: number
+  className: string
+}> = ({ count, className }) => (
+  <div className={`counter ${className}`}>
+    <p
+      key={count}
+      className={`counter__count ${className ? className + '__count' : ''}`}
+    >
+      {count}
+    </p>
+  </div>
+)
+
+export type ICounterProps = {
+  className?: string
+}
+
+
+const App: React.FC<ICounterProps> = ({ className = '' }) => {
+  
+    const [count, setCount] = useState(0)
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        if (count > 99) return setCount(0)
+  
+        setCount(count + 1)
+      }, 1000)
+  
+      return () => clearInterval(interval)
+    }, [count, setCount])
+  
+    return <Counter className={className} count={count} />
+  
 }
 
 export default App;
